@@ -1,6 +1,17 @@
+const savedToken = sessionStorage.getItem("token")
+const savedUser = (() => {
+	try {
+		return JSON.parse(sessionStorage.getItem("user"))
+	} catch {
+		return null
+	}
+})()
+
 export const initialStore=()=>{
   return{
     message: null,
+    token: savedToken || null,
+    user: savedUser || null,
     todos: [
       {
         id: 1,
@@ -22,6 +33,27 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         message: action.payload
+      };
+
+    case 'set_token':
+      return {
+        ...store,
+        token: action.payload
+      };
+
+    case 'set_user':
+      return {
+        ...store,
+        user: action.payload
+      };
+
+    case 'logout':
+      sessionStorage.removeItem("token")
+      sessionStorage.removeItem("user")
+      return {
+        ...store,
+        token: null,
+        user: null
       };
       
     case 'add_task':
